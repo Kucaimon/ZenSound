@@ -1,14 +1,13 @@
 /* Font loading optimization */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-// Variables
+// ==================== VARIABLES & MIXINS ====================
 $primary-color: #6c63ff;
 $text-color: #ffffff;
 $bg-dark: #0f0f1a;
 $bg-scroll: rgba(15, 15, 26, 0.95);
 $transition: all 0.3s ease;
 
-// Mixins
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -28,7 +27,16 @@ $transition: all 0.3s ease;
   }
 }
 
-// Base styles
+@mixin mobile-tablet {
+  @include respond(mobile) {
+    @content;
+  }
+  @include respond(tablet) {
+    @content;
+  }
+}
+
+// ==================== BASE STYLES ====================
 * {
   margin: 0;
   padding: 0;
@@ -48,7 +56,8 @@ body {
   padding: 0 20px;
 }
 
-// Header styles
+// ==================== COMPONENT STYLES ====================
+// Header & Navigation
 .header {
   position: fixed;
   top: 0;
@@ -82,6 +91,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  text-decoration: none;
 
   &-img {
     width: 150px;
@@ -95,7 +105,7 @@ body {
   }
 }
 
-// Mobile menu styles
+// Mobile menu
 .nav-menu {
   display: flex;
   align-items: center;
@@ -150,6 +160,21 @@ body {
 
   &:hover {
     color: $primary-color;
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: $primary-color;
+    transition: $transition;
   }
 }
 
@@ -162,9 +187,12 @@ body {
     width: 100%;
     gap: 15px;
   }
+
+  @include respond(mobile) {
+    display: none;
+  }
 }
 
-// Бургер-кнопка
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
@@ -186,112 +214,20 @@ body {
     display: flex;
   }
 
-  &.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
-  }
-
-  &.active span:nth-child(2) {
-    opacity: 0;
-  }
-
-  &.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
-  }
-}
-
-// Затемнение фона при открытом меню
-.menu-open {
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 999;
-    animation: fadeIn 0.3s ease;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 15px;
-
-  @include respond(tablet) {
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-
-    &.active {
-      display: flex;
+  &.active {
+    span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    span:nth-child(2) {
+      opacity: 0;
+    }
+    span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
     }
   }
 }
 
-// Медиа-запрос для мобильного меню
-@include respond(tablet) {
-  .nav {
-    position: relative;
-  }
-
-  .nav-list.active + .nav-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-  }
-}
-
-.nav-link {
-  color: $text-color;
-  text-decoration: none;
-  font-weight: 500;
-  transition: $transition;
-  position: relative;
-
-  &:hover {
-    color: $primary-color;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: $primary-color;
-    transition: $transition;
-  }
-
-  &:hover::after {
-    width: 100%;
-  }
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 15px;
-
-  @include respond(mobile) {
-    display: none;
-  }
-}
-
+// Buttons
 .btn {
   padding: 12px 24px;
   border: none;
@@ -322,39 +258,50 @@ body {
       transform: translateY(-2px);
     }
   }
-}
 
-.mobile-menu-btn {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
+  &-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: $text-color;
 
-  span {
-    width: 25px;
-    height: 3px;
-    background: $text-color;
-    transition: $transition;
-    border-radius: 2px;
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
   }
 
-  @include respond(tablet) {
+  &-large {
+    padding: 16px 32px;
+    font-size: 16px;
     display: flex;
+    align-items: center;
+    gap: 12px;
+
+    img {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
   }
 
-  &.active span:nth-child(1) {
-    transform: rotate(45deg) translate(6px, 6px);
+  &-full {
+    width: 100%;
+    justify-content: center;
   }
 
-  &.active span:nth-child(2) {
-    opacity: 0;
-  }
+  &-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: $text-color;
 
-  &.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(6px, -6px);
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: $primary-color;
+    }
   }
 }
 
@@ -367,7 +314,6 @@ body {
   @include respond(tablet) {
     padding: 140px 0 80px;
   }
-
   @include respond(mobile) {
     padding: 120px 0 60px;
   }
@@ -382,7 +328,6 @@ body {
   @include respond(tablet) {
     grid-template-columns: 1fr;
     gap: 40px;
-    text-align: center;
   }
 }
 
@@ -391,7 +336,8 @@ body {
 
   @include respond(tablet) {
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0 auto; // центрирование блока
+    text-align: center; // если нужен центр текста
   }
 }
 
@@ -404,7 +350,6 @@ body {
   @include respond(tablet) {
     font-size: 48px;
   }
-
   @include respond(mobile) {
     font-size: 36px;
   }
@@ -439,61 +384,46 @@ body {
   }
 }
 
-.btn-large {
-  padding: 16px 32px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  img {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: $text-color;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-  }
-}
-
 .hero-stats {
   display: flex;
   gap: 40px;
 
-  @include respond(mobile) {
-    justify-content: center;
-    gap: 30px;
+  @include respond(tablet) {
+    border: 3px solid red; // временный тест
+  }
+
+  .stat {
+    text-align: center;
+
+    @include respond(tablet) {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+    }
+
+    &-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 4px;
+
+      @include respond(tablet) {
+        text-align: center;
+      }
+
+      @include respond(mobile) {
+        font-size: 24px;
+      }
+    }
+
+    &-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
 }
 
-.stat {
-  text-align: center;
-}
-
-.stat-number {
-  font-size: 32px;
-  font-weight: 700;
-  color: $primary-color;
-  margin-bottom: 4px;
-
-  @include respond(mobile) {
-    font-size: 24px;
-  }
-}
-
-.stat-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-// Hero Visual
 .hero-visual {
   position: relative;
 
@@ -502,74 +432,27 @@ body {
   }
 }
 
-.hero-image-wrapper {
-  position: relative;
-  z-index: 2;
-}
-
-.hero-image {
-  width: 100%;
-  max-width: 500px;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-
-  @include respond(tablet) {
-    margin: 0 auto;
-  }
-}
-
-.hero-shape-1 {
+.hero-shape {
   position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 200px;
-  height: 200px;
-  background: linear-gradient(135deg, #6c63ff 0%, transparent 70%);
   border-radius: 50%;
   z-index: 1;
-  animation: float 6s ease-in-out infinite;
-}
 
-.hero-shape-2 {
-  position: absolute;
-  bottom: -30px;
-  left: -30px;
-  width: 150px;
-  height: 150px;
-  background: linear-gradient(135deg, #ff6b6b 0%, transparent 70%);
-  border-radius: 50%;
-  z-index: 1;
-  animation: float 8s ease-in-out infinite 1s;
-}
-
-// Стиль для иконок (делаем их белыми)
-.icon-white {
-  filter: brightness(0) invert(1);
-}
-
-// Дополнительные стили для кнопок с иконками
-.hero-buttons {
-  .btn {
-    img {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      img {
-        transform: scale(1.1);
-      }
-    }
+  &-1 {
+    top: -20px;
+    right: -20px;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #6c63ff 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
   }
-}
 
-// Animations
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(10deg);
+  &-2 {
+    bottom: -30px;
+    left: -30px;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #ff6b6b 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite 1s;
   }
 }
 
@@ -620,60 +503,27 @@ body {
   justify-content: center;
   align-items: center;
   opacity: 0.7;
-  transition: all 0.3s ease;
+  transition: $transition;
   color: rgba(255, 255, 255, 0.8);
+  animation: fadeInUp 0.6s ease forwards;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: $i * 0.1s;
+    }
+  }
 
   &:hover {
     opacity: 1;
     color: $primary-color;
     transform: translateY(-2px);
+    animation: none;
   }
 
   svg {
     width: 100%;
     height: auto;
     max-width: 120px;
-  }
-
-  text {
-    font-size: 14px;
-    font-family: "Inter", sans-serif;
-  }
-}
-
-// Анимация появления логотипов
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-}
-
-.logo-item {
-  animation: fadeInUp 0.6s ease forwards;
-
-  &:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-  &:nth-child(4) {
-    animation-delay: 0.4s;
-  }
-  &:nth-child(5) {
-    animation-delay: 0.5s;
-  }
-
-  &:hover {
-    animation: none;
   }
 }
 
@@ -685,7 +535,6 @@ body {
   @include respond(tablet) {
     padding: 80px 0;
   }
-
   @include respond(mobile) {
     padding: 60px 0;
   }
@@ -720,7 +569,6 @@ body {
   @include respond(tablet) {
     font-size: 36px;
   }
-
   @include respond(mobile) {
     font-size: 28px;
   }
@@ -743,12 +591,9 @@ body {
 
   @include respond(tablet) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
   }
-
   @include respond(mobile) {
     grid-template-columns: 1fr;
-    gap: 25px;
   }
 }
 
@@ -758,8 +603,17 @@ body {
   border-radius: 20px;
   padding: 40px 30px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: $transition;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: featureSlideUp 0.8s ease forwards;
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: $i * 0.1s;
+    }
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -776,9 +630,7 @@ body {
   width: 80px;
   height: 80px;
   margin: 0 auto 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   background: linear-gradient(
     135deg,
     rgba(108, 99, 255, 0.1) 0%,
@@ -811,26 +663,6 @@ body {
   margin: 0;
 }
 
-// Анимация появления карточек
-.feature-card {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: featureSlideUp 0.8s ease forwards;
-
-  @for $i from 1 through 6 {
-    &:nth-child(#{$i}) {
-      animation-delay: $i * 0.1s;
-    }
-  }
-}
-
-@keyframes featureSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 // Testimonials Section
 .testimonials {
   padding: 100px 0;
@@ -839,7 +671,6 @@ body {
   @include respond(tablet) {
     padding: 80px 0;
   }
-
   @include respond(mobile) {
     padding: 60px 0;
   }
@@ -864,11 +695,22 @@ body {
 .testimonial-card {
   flex: 0 0 calc(33.333% - 20px);
   min-width: 0;
+  opacity: 0;
+  animation: testimonialFadeIn 0.8s ease forwards;
+
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
 
   @include respond(tablet) {
     flex: 0 0 calc(50% - 15px);
   }
-
   @include respond(mobile) {
     flex: 0 0 100%;
   }
@@ -881,7 +723,7 @@ body {
   padding: 40px;
   height: 100%;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     border-color: $primary-color;
@@ -959,10 +801,8 @@ body {
   background: rgba(255, 255, 255, 0.05);
   color: $text-color;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: $transition;
+  @include flex-center;
 
   &:hover {
     border-color: $primary-color;
@@ -993,33 +833,11 @@ body {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &.active {
     background: $primary-color;
     transform: scale(1.2);
-  }
-}
-
-// Анимация для появления отзывов
-.testimonial-card {
-  opacity: 0;
-  animation: testimonialFadeIn 0.8s ease forwards;
-
-  &:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-}
-
-@keyframes testimonialFadeIn {
-  to {
-    opacity: 1;
   }
 }
 
@@ -1031,7 +849,6 @@ body {
   @include respond(tablet) {
     padding: 80px 0;
   }
-
   @include respond(mobile) {
     padding: 60px 0;
   }
@@ -1060,12 +877,12 @@ body {
   display: inline-block;
   width: 60px;
   height: 32px;
-}
 
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 }
 
 .toggle-slider {
@@ -1078,28 +895,28 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 34px;
-  transition: all 0.3s ease;
-}
+  transition: $transition;
 
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 24px;
-  width: 24px;
-  left: 4px;
-  bottom: 3px;
-  background: $primary-color;
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  &:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 3px;
+    background: $primary-color;
+    border-radius: 50%;
+    transition: $transition;
+  }
 }
 
 input:checked + .toggle-slider {
   background: rgba(108, 99, 255, 0.2);
   border-color: $primary-color;
-}
 
-input:checked + .toggle-slider:before {
-  transform: translateX(26px);
+  &:before {
+    transform: translateX(26px);
+  }
 }
 
 .pricing-grid {
@@ -1112,10 +929,8 @@ input:checked + .toggle-slider:before {
   @include respond(tablet) {
     grid-template-columns: repeat(2, 1fr);
   }
-
   @include respond(mobile) {
     grid-template-columns: 1fr;
-    max-width: 400px;
   }
 }
 
@@ -1125,8 +940,21 @@ input:checked + .toggle-slider:before {
   border-radius: 20px;
   padding: 40px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: $transition;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: pricingSlideUp 0.8s ease forwards;
+
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.3s;
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -1247,64 +1075,6 @@ input:checked + .toggle-slider:before {
   }
 }
 
-.btn-full {
-  width: 100%;
-  justify-content: center;
-}
-
-.btn-outline {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: $text-color;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: $primary-color;
-  }
-}
-
-// Анимация для карточек
-.pricing-card {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: pricingSlideUp 0.8s ease forwards;
-
-  &:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-}
-
-@keyframes pricingSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Стили для переключения периодов
-.annual-pricing {
-  .price-amount.monthly {
-    display: none;
-  }
-
-  .price-amount.annual {
-    display: inline;
-  }
-
-  .price-period::before {
-    content: "(billed annually)";
-    font-size: 12px;
-    display: block;
-    margin-top: 5px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-}
 // FAQ Section
 .faq {
   padding: 100px 0;
@@ -1313,7 +1083,6 @@ input:checked + .toggle-slider:before {
   @include respond(tablet) {
     padding: 80px 0;
   }
-
   @include respond(mobile) {
     padding: 60px 0;
   }
@@ -1334,8 +1103,17 @@ input:checked + .toggle-slider:before {
   border-radius: 16px;
   margin-bottom: 16px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: $transition;
   backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: faqSlideUp 0.6s ease forwards;
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: $i * 0.1s;
+    }
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -1350,6 +1128,9 @@ input:checked + .toggle-slider:before {
 
     .faq-icon {
       transform: rotate(180deg);
+    }
+    .faq-answer {
+      max-height: 500px;
     }
   }
 }
@@ -1367,7 +1148,7 @@ input:checked + .toggle-slider:before {
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     color: $primary-color;
@@ -1404,10 +1185,6 @@ input:checked + .toggle-slider:before {
   }
 }
 
-.faq-item.active .faq-answer {
-  max-height: 500px;
-}
-
 .faq-support {
   text-align: center;
   margin-top: 60px;
@@ -1427,31 +1204,11 @@ input:checked + .toggle-slider:before {
   color: $primary-color;
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     color: lighten($primary-color, 10%);
     text-decoration: underline;
-  }
-}
-
-// Анимация появления FAQ items
-.faq-item {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: faqSlideUp 0.6s ease forwards;
-
-  @for $i from 1 through 6 {
-    &:nth-child(#{$i}) {
-      animation-delay: $i * 0.1s;
-    }
-  }
-}
-
-@keyframes faqSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -1485,7 +1242,6 @@ input:checked + .toggle-slider:before {
   @include respond(tablet) {
     padding: 100px 0;
   }
-
   @include respond(mobile) {
     padding: 80px 0;
   }
@@ -1512,11 +1268,13 @@ input:checked + .toggle-slider:before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: ctaSlideUp 0.8s ease forwards 0.2s;
 
   @include respond(tablet) {
     font-size: 36px;
   }
-
   @include respond(mobile) {
     font-size: 28px;
   }
@@ -1527,6 +1285,9 @@ input:checked + .toggle-slider:before {
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.8);
   margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: ctaSlideUp 0.8s ease forwards 0.4s;
 
   @include respond(mobile) {
     font-size: 16px;
@@ -1539,6 +1300,9 @@ input:checked + .toggle-slider:before {
   gap: 20px;
   justify-content: center;
   margin-bottom: 60px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: ctaSlideUp 0.8s ease forwards 0.6s;
 
   @include respond(mobile) {
     flex-direction: column;
@@ -1552,7 +1316,7 @@ input:checked + .toggle-slider:before {
   font-size: 18px;
   font-weight: 600;
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     transform: translateY(-3px) scale(1.05);
@@ -1569,11 +1333,13 @@ input:checked + .toggle-slider:before {
   display: flex;
   justify-content: center;
   gap: 50px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: ctaSlideUp 0.8s ease forwards 0.8s;
 
   @include respond(tablet) {
     gap: 40px;
   }
-
   @include respond(mobile) {
     gap: 30px;
     flex-wrap: wrap;
@@ -1582,107 +1348,23 @@ input:checked + .toggle-slider:before {
 
 .cta-stat {
   text-align: center;
-}
 
-.cta-stat .stat-number {
-  font-size: 32px;
-  font-weight: 700;
-  color: $primary-color;
-  margin-bottom: 8px;
+  .stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: $primary-color;
+    margin-bottom: 8px;
 
-  @include respond(mobile) {
-    font-size: 28px;
+    @include respond(mobile) {
+      font-size: 28px;
+    }
   }
-}
 
-.cta-stat .stat-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-// Анимации
-@keyframes rotateGradient {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.cta-title {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: ctaSlideUp 0.8s ease forwards 0.2s;
-}
-
-.cta-description {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: ctaSlideUp 0.8s ease forwards 0.4s;
-}
-
-.cta-buttons {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: ctaSlideUp 0.8s ease forwards 0.6s;
-}
-
-.cta-stats {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: ctaSlideUp 0.8s ease forwards 0.8s;
-}
-
-@keyframes ctaSlideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Эффект частиц (опционально)
-.cta-final::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-      2px 2px at 20% 30%,
-      rgba(108, 99, 255, 0.3) 50%,
-      transparent 100%
-    ),
-    radial-gradient(
-      2px 2px at 80% 70%,
-      rgba(255, 107, 107, 0.3) 50%,
-      transparent 100%
-    ),
-    radial-gradient(
-      3px 3px at 40% 80%,
-      rgba(108, 99, 255, 0.4) 50%,
-      transparent 100%
-    ),
-    radial-gradient(
-      2px 2px at 60% 10%,
-      rgba(255, 107, 107, 0.3) 50%,
-      transparent 100%
-    );
-  animation: floatParticles 10s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-@keyframes floatParticles {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(10deg);
+  .stat-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }
 
@@ -1696,7 +1378,6 @@ input:checked + .toggle-slider:before {
   @include respond(tablet) {
     padding: 60px 0 20px;
   }
-
   @include respond(mobile) {
     padding: 40px 0 20px;
   }
@@ -1721,14 +1402,19 @@ input:checked + .toggle-slider:before {
 }
 
 .footer-column {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: footerSlideUp 0.8s ease forwards;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: $i * 0.1s;
+    }
+  }
+
   &:first-child {
     @include respond(tablet) {
       grid-column: 1 / -1;
-      text-align: center;
-    }
-
-    @include respond(mobile) {
-      text-align: left;
     }
   }
 }
@@ -1739,14 +1425,6 @@ input:checked + .toggle-slider:before {
   .logo {
     margin-bottom: 20px;
     display: inline-flex;
-
-    @include respond(tablet) {
-      justify-content: center;
-    }
-
-    @include respond(mobile) {
-      justify-content: flex-start;
-    }
   }
 }
 
@@ -1756,42 +1434,23 @@ input:checked + .toggle-slider:before {
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
   max-width: 300px;
-
-  @include respond(tablet) {
-    max-width: none;
-    text-align: center;
-  }
-
-  @include respond(mobile) {
-    text-align: left;
-  }
 }
 
 .footer-social {
   display: flex;
   gap: 15px;
-
-  @include respond(tablet) {
-    justify-content: center;
-  }
-
-  @include respond(mobile) {
-    justify-content: flex-start;
-  }
 }
 
 .social-link {
   width: 40px;
   height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     background: $primary-color;
@@ -1834,7 +1493,7 @@ input:checked + .toggle-slider:before {
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: $transition;
 
     &:hover {
       color: $primary-color;
@@ -1862,7 +1521,7 @@ input:checked + .toggle-slider:before {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:focus-within {
     border-color: $primary-color;
@@ -1890,7 +1549,7 @@ input:checked + .toggle-slider:before {
   padding: 12px 16px;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: $transition;
 
   &:hover {
     background: lighten($primary-color, 10%);
@@ -1915,7 +1574,6 @@ input:checked + .toggle-slider:before {
   @include respond(mobile) {
     flex-direction: column;
     gap: 15px;
-    text-align: center;
   }
 }
 
@@ -1937,7 +1595,7 @@ input:checked + .toggle-slider:before {
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     font-size: 12px;
-    transition: all 0.3s ease;
+    transition: $transition;
 
     &:hover {
       color: $primary-color;
@@ -1945,16 +1603,68 @@ input:checked + .toggle-slider:before {
   }
 }
 
-// Анимация появления футера
-.footer-column {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: footerSlideUp 0.8s ease forwards;
+// ==================== ANIMATIONS ====================
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+}
 
-  @for $i from 1 through 5 {
-    &:nth-child(#{$i}) {
-      animation-delay: $i * 0.1s;
-    }
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+@keyframes featureSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes testimonialFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pricingSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes faqSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotateGradient {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ctaSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -1965,135 +1675,185 @@ input:checked + .toggle-slider:before {
   }
 }
 
-// Центрирование только для мобильных
-@include respond(mobile) {
-  // Герой секция
-  .hero-content {
+// ==================== TABLET CENTERING FIXES ====================
+@include respond(tablet) {
+  // General centering
+  .hero-content,
+  .section-header,
+  .features-grid,
+  .feature-card,
+  .testimonials-slider,
+  .testimonial-content,
+  .testimonial-author,
+  .pricing-grid,
+  .pricing-header,
+  .faq-question,
+  .cta-content,
+  .footer-content,
+  .footer-brand,
+  .footer-title,
+  .footer-links,
+  .footer-newsletter,
+  .trusted-content {
     text-align: center;
   }
 
-  .hero-buttons {
+  // Flex centering
+  .hero-buttons,
+  .hero-stats,
+  .cta-buttons,
+  .cta-stats,
+  .testimonials-controls,
+  .pricing-toggle,
+  .footer-social {
     justify-content: center;
+  }
+
+  // Additional centering
+  .feature-icon,
+  .author-info,
+  .logo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // Grid centering
+  .features-grid,
+  .pricing-grid,
+  .trusted-logos {
+    justify-items: center;
+  }
+
+  // Specific element fixes
+  .hero-stats {
+    justify-content: center !important;
+    margin: 0 auto;
+
+    .stat {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .footer-newsletter {
+    display: flex;
     flex-direction: column;
     align-items: center;
-  }
 
-  .hero-stats {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  // Секции
-  .section-header {
-    text-align: center;
-  }
-
-  // Особенности
-  .feature-card {
-    text-align: center;
-
-    .feature-icon {
+    p {
+      text-align: center;
       margin-left: auto;
       margin-right: auto;
     }
   }
 
-  // Отзывы
-  .testimonial-author {
-    justify-content: center !important;
-    text-align: center;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .author-info {
-    text-align: center;
-  }
-
-  // Цены
-  .pricing-card {
-    text-align: center;
-  }
-
-  .pricing-features .feature-item {
+  .newsletter-form {
+    display: flex;
     justify-content: center;
   }
 
-  // FAQ
-  .faq-question {
-    text-align: center;
+  .input-group {
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+// ==================== MOBILE SPECIFIC STYLES ====================
+@include respond(mobile) {
+  .container {
+    padding: 0 15px;
   }
 
-  // CTA
+  .hero-buttons,
   .cta-buttons {
-    justify-content: center;
     flex-direction: column;
     align-items: center;
   }
 
-  .cta-stats {
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .section-title {
+    font-size: 32px;
+  }
+
+  .features-grid,
+  .trusted-logos {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  // Touch optimization
+  .nav-link,
+  .btn,
+  .faq-question,
+  .testimonials-dot {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
   }
 }
 
-// Центрирование для планшетов
-@include respond(tablet) {
-  .hero-content {
-    text-align: center;
-  }
+// ==================== UTILITY CLASSES ====================
+.icon-white {
+  filter: brightness(0) invert(1);
+}
 
-  .hero-buttons {
-    justify-content: center;
-  }
+.menu-open {
+  overflow: hidden;
 
-  .section-header {
-    text-align: center;
-  }
-
-  .testimonial-author {
-    justify-content: center;
-  }
-
-  .pricing-header {
-    text-align: center;
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
   }
 }
 
-// Footer центрирование
-@include respond(mobile) {
-  .footer-content {
-    text-align: center;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-
-  .footer-brand {
-    text-align: center;
-
-    .logo {
-      justify-content: center;
-    }
-  }
-
-  .footer-social {
-    justify-content: center;
-  }
-
-  .footer-links {
-    text-align: center;
-  }
-
-  .footer-newsletter {
-    text-align: center;
+  to {
+    opacity: 1;
   }
 }
 
-@include respond(tablet) {
-  .footer-content {
-    text-align: center;
+// Annual pricing styles
+.annual-pricing {
+  .price-amount.monthly {
+    display: none;
   }
 
-  .footer-brand {
-    text-align: center;
+  .price-amount.annual {
+    display: inline;
+  }
+
+  .price-period::before {
+    content: "(billed annually)";
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+    color: rgba(255, 255, 255, 0.5);
   }
 }
