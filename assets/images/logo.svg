@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000" height="300" viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+  <title>ZenSound Logo</title>
+  <defs>
+    <style>
+      .bg{ fill:#1cc7d0; }
+      .wave{ fill:none; stroke:#ffffff; stroke-width:22; stroke-linecap:round; stroke-linejoin:round; }
+      .word{ fill:#ffffff; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; font-weight: 700; font-size: 120px; }
+    </style>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(40,40)">
+    <circle class="bg" cx="110" cy="110" r="110"/>
+    <path class="wave" d="M60 160c32 30 104 30 136 0"/>
+    <path class="wave" d="M60 85c24-22 80-22 104 0"/>
+    <path class="wave" d="M122 120c-14 0-26-5-34-14"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text class="word" x="300" y="170">ZenSound</text>
+</svg>
